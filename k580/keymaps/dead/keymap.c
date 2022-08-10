@@ -1,4 +1,10 @@
 #include QMK_KEYBOARD_H
+#include "action_layer.h"
+#include "eeconfig.h"
+
+#include "raw_hid.h"
+
+#include "snake.h"
 
 // K580 Media Keys
 // 1,20                 1,19            6,20           4,20
@@ -8,8 +14,9 @@
 // G1       G2      G3      G4      G5      Rec
 
 enum layer_names {
-    _BASE,
+    _SNAKE,
     _FN,
+    _BASE,
 };
 
 enum my_tapDances{
@@ -42,23 +49,39 @@ enum my_keycodes {
     MULTINEXUS,
     REACTWIDE,
     SPIRAL,
+    QUARTER,
+    HALF,
+    SNAKE,
+    DIRRGHT,
+    DIRUP,
+    DIRLEFT,
+    DIRDOWN,
 };
 
 bool BRI = false; // Keep track of volume/brightness for the encoder
 
+char quarter_count = 0;
+char half_count = 0;
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /*  Row:        0           1           2           3        4           5        6        7           8           9           10          11          12          13          14          15          16          17          18          19          20     */
+    [_SNAKE]   = { {   RESET,      XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX },
+                {   QUARTER,    XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    RGB_HUD,    RGB_HUI,    QUARTER },
+                {   XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX,    HALF,    XXXXXXX,    XXXXXXX,    XXXXXXX,    HALF,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX },
+                {   XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,   XXXXXXX,    XXXXXXX },
+                {   XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    DIRUP,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX },
+                {   QUARTER,    XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,    XXXXXXX, _______, XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    DIRLEFT,    DIRDOWN,    DIRRGHT ,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX }
+            },
     [_BASE] = { {   KC_ESC,     KC_F1,      KC_F2,      KC_F3,   KC_F4,      KC_F5,   KC_F6,   KC_F7,      KC_F8,      KC_F9,      KC_F10,     KC_F11,     KC_F12,     U_REC,      KC_PSCR,    KC_SLCK,    KC_PAUS,    KC_NO,      KC_NO,      KC_MPRV,    U_VOLBRI},
                 {   KC_GRV,     KC_1,       KC_2,       KC_3,    KC_4,       KC_5,    KC_6,    KC_7,       KC_8,       KC_9,       KC_0,       KC_MINS,    KC_EQL,     KC_BSPC,    KC_INS,     KC_HOME,    KC_PGUP,    KC_NLCK,    KC_PSLS,    KC_PAST,    KC_PMNS },
                 {   KC_TAB,     KC_Q,       KC_W,       KC_E,    KC_R,       KC_T,    KC_Y,    KC_U,       KC_I,       KC_O,       KC_P,       KC_LBRC,    KC_RBRC,    KC_BSLS,    KC_DEL,     KC_END,     KC_PGDN,    KC_P7,      KC_P8,      KC_P9,      KC_PPLS },
                 {   KC_CAPS,    KC_A,       KC_S,       KC_D,    KC_F,       KC_G,    KC_H,    KC_J,       KC_K,       KC_L,       KC_SCLN,    KC_QUOT,    KC_NO,      KC_ENT,     U_G5,       U_G4,       U_G3,       KC_P4,      KC_P5,      KC_P6,      KC_MNXT },
                 {   KC_LSFT,    KC_NO,      KC_Z,       KC_X,    KC_C,       KC_V,    KC_B,    KC_N,       KC_M,       KC_COMM,    KC_DOT,     KC_SLSH,    KC_NO,      KC_RSFT,    U_G2,       KC_UP,      U_G1,       KC_P1,      KC_P2,      KC_P3,      KC_PENT },
-                {   KC_LCTL,    KC_LGUI,    TD(TD_LALT_MUTE),    KC_SPC,     KC_RALT, TD(FN_LAYR), KC_APP,     KC_B,       KC_RCTL,    KC_NO,      KC_NO,      KC_NO,      KC_NO,      KC_NO,      KC_LEFT,    KC_DOWN,    KC_RIGHT,   KC_H,       KC_P0,      KC_PDOT,    KC_MPLY }
+                {   SNAKE,    KC_LGUI,    TD(TD_LALT_MUTE),    KC_SPC,     KC_RALT, TD(FN_LAYR), KC_APP,     KC_B,       KC_RCTL,    KC_NO,      KC_NO,      KC_NO,      KC_NO,      KC_NO,      KC_LEFT,    KC_DOWN,    KC_RIGHT,   KC_H,       KC_P0,      KC_PDOT,    KC_MPLY }
               },
     [_FN]   = { {   RESET,      KC_MSEL,    KC_VOLD,    KC_VOLU, KC_MUTE,    KC_MSTP, KC_MPRV, KC_MPLY,    KC_MNXT,    KC_MAIL,    KC_SLEP,    KC_CALC,    RGB_TOG,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______ },
                 {   _______,    TO(_BASE),  TO(_FN),    _______, _______,    _______, _______, _______,    _______,    _______,    _______,    RGB_SPD,    RGB_SPI,    _______,    _______,    _______,    _______,    _______,    RGB_HUD,    RGB_HUI,    KC_BRIU },
                 {   _______,    _______,    HUEWAVE,    _______, _______,    _______, _______, _______,    _______,    _______,    PIXELRAIN,    _______,    _______,    _______,    _______,    _______,    _______,    RGB_M_P,    RGB_M_B,    RGB_M_SW,    KC_BRID },
-                {   _______,    ALPHAMOD,    SPIRAL,   _______, _______, GRADIENT, HEATMAPKEY, JELLYBEAN, _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,   _______,    _______ },
+                {   _______,    TO(_SNAKE),    SPIRAL,   _______, _______, GRADIENT, HEATMAPKEY, JELLYBEAN, _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,   _______,    _______ },
                 {   _______,    _______,    _______,    _______, CHEVRON,    _______, BANDVALUE, REACTWIDE,    MULTINEXUS,    _______,    _______,    _______,    _______,    _______,    _______,    RGB_SAI,    _______,    RGB_MOD,    RGB_M_G,    RGB_RMOD,    _______ },
                 {   _______,    _______,    _______,    _______, _______,    _______, _______, _______,    _______,    _______,    _______,    _______,    _______,    _______,    RGB_SPD,    RGB_SAD,    RGB_SPI,    _______,    RGB_TOG,    BL_TOGG,    _______ }
              }
@@ -101,6 +124,64 @@ void macro_led_clear(void) {
 // Macro support (for default keymap)
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+    case DIRLEFT:
+        if (snake_status.last_moved_direction != DIRECTION_RIGHT) {
+            snake_status.direction = DIRECTION_LEFT;
+        }
+        return false;
+    case DIRRGHT:
+        if (snake_status.last_moved_direction != DIRECTION_LEFT) {
+            snake_status.direction = DIRECTION_RIGHT;
+        }
+            if (record->event.pressed) {
+                quarter_count += 1;
+            } else {
+                quarter_count -= 1;
+            }
+            if (quarter_count == 4) {
+                reset_keyboard();
+            }
+            return false;
+            break;
+    case QUARTER:
+        // corner
+        if (record->event.pressed) {
+            quarter_count += 1;
+        } else {
+            quarter_count -= 1;
+        }
+        if (quarter_count == 4) {
+            reset_keyboard();
+        }
+        return false;
+        break;
+    case HALF:
+        if (record->event.pressed) {
+            half_count += 1;
+        } else {
+            half_count -= 1;
+        }
+        if (half_count == 2) {
+            layer_move(_BASE);
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+        }
+        return false;
+        break;
+    case SNAKE:
+        layer_move(_SNAKE);
+        rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_MULTISPLASH + 1);
+        return false;
+        break;
+    case DIRDOWN:
+        if (snake_status.last_moved_direction != DIRECTION_UP) {
+            snake_status.direction = DIRECTION_DOWN;
+        }
+        return false;
+    case DIRUP:
+        if (snake_status.last_moved_direction != DIRECTION_DOWN) {
+            snake_status.direction = DIRECTION_UP;
+        }
+        return false;
     case HEATMAPKEY:
       if (record->event.pressed) {
         rgb_matrix_mode_noeeprom(RGB_MATRIX_TYPING_HEATMAP);
@@ -110,7 +191,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return false; // Skip all further processing of this key
     case ALPHAMOD:
       if (record->event.pressed) {
-        rgb_matrix_mode_noeeprom(RGB_MATRIX_ALPHAS_MODS);
+        rgb_matrix_mode_noeeprom(RGB_MATRIX_CUSTOM_SNAKE);
       } else {
         // Do something else when release
       }
@@ -245,6 +326,13 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
 
 void matrix_init_user(void) {
     rgb_matrix_mode_noeeprom(RGB_MATRIX_RAINBOW_PINWHEELS);
+}
+void keyboard_post_init_user(void) {
+    // rgb_matrix_mode_noeeprom(RGB_MATRIX_SNAKE);
+    eeconfig_init();
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_MULTISPLASH + 1);
+
+    snake_init();
 }
 
 
