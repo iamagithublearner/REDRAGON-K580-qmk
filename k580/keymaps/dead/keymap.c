@@ -10,11 +10,13 @@
 enum layer_names {
     _BASE,
     _FN,
+    _WIND,
 };
 
 enum my_tapDances{
     TD_LALT_MUTE,
     FN_LAYR,
+    GUI_LAYR2,
 };
 
 // Macro Keys (for default keymap)
@@ -53,7 +55,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                 {   KC_TAB,     KC_Q,       KC_W,       KC_E,    KC_R,       KC_T,    KC_Y,    KC_U,       KC_I,       KC_O,       KC_P,       KC_LBRC,    KC_RBRC,    KC_BSLS,    KC_DEL,     KC_END,     KC_PGDN,    KC_P7,      KC_P8,      KC_P9,      KC_PPLS },
                 {   KC_CAPS,    KC_A,       KC_S,       KC_D,    KC_F,       KC_G,    KC_H,    KC_J,       KC_K,       KC_L,       KC_SCLN,    KC_QUOT,    KC_NO,      KC_ENT,     U_G5,       U_G4,       U_G3,       KC_P4,      KC_P5,      KC_P6,      KC_MNXT },
                 {   KC_LSFT,    KC_NO,      KC_Z,       KC_X,    KC_C,       KC_V,    KC_B,    KC_N,       KC_M,       KC_COMM,    KC_DOT,     KC_SLSH,    KC_NO,      KC_RSFT,    U_G2,       KC_UP,      U_G1,       KC_P1,      KC_P2,      KC_P3,      KC_PENT },
-                {   KC_LCTL,    KC_LGUI,    TD(TD_LALT_MUTE),    KC_SPC,     KC_RALT, TD(FN_LAYR), KC_APP,     KC_B,       KC_RCTL,    KC_NO,      KC_NO,      KC_NO,      KC_NO,      KC_NO,      KC_LEFT,    KC_DOWN,    KC_RIGHT,   KC_H,       KC_P0,      KC_PDOT,    KC_MPLY }
+                {   KC_LCTL,    TD(GUI_LAYR2),    TD(TD_LALT_MUTE),    KC_SPC,     KC_RALT, TD(FN_LAYR), KC_APP,     KC_B,       KC_RCTL,    KC_NO,      KC_NO,      KC_NO,      KC_NO,      KC_NO,      KC_LEFT,    KC_DOWN,    KC_RIGHT,   KC_H,       KC_P0,      KC_PDOT,    KC_MPLY }
               },
     [_FN]   = { {   RESET,      KC_MSEL,    KC_VOLD,    KC_VOLU, KC_MUTE,    KC_MSTP, KC_MPRV, KC_MPLY,    KC_MNXT,    KC_MAIL,    KC_SLEP,    KC_CALC,    RGB_TOG,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______ },
                 {   _______,    TO(_BASE),  TO(_FN),    _______, _______,    _______, _______, _______,    _______,    _______,    _______,    RGB_SPD,    RGB_SPI,    _______,    _______,    _______,    _______,    _______,    RGB_HUD,    RGB_HUI,    KC_BRIU },
@@ -61,7 +63,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                 {   _______,    ALPHAMOD,    SPIRAL,   _______, _______, GRADIENT, HEATMAPKEY, JELLYBEAN, _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,   _______,    _______ },
                 {   _______,    _______,    _______,    _______, CHEVRON,    _______, BANDVALUE, REACTWIDE,    MULTINEXUS,    _______,    _______,    _______,    _______,    _______,    _______,    RGB_SAI,    _______,    RGB_MOD,    RGB_M_G,    RGB_RMOD,    _______ },
                 {   _______,    _______,    _______,    _______, _______,    _______, _______, _______,    _______,    _______,    _______,    _______,    _______,    _______,    RGB_SPD,    RGB_SAD,    RGB_SPI,    _______,    RGB_TOG,    BL_TOGG,    _______ }
-             }
+             },
+    [_WIND]   = { {   _______,    _______,    _______,    _______, _______,    _______, _______, _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______ },
+                {   KC_VOLU,    _______,    _______,    _______, _______,    _______, _______, _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______ },
+                {   KC_VOLD,    _______,    _______,    _______, _______,    _______, _______, _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______ },
+                {   _______,    _______,    _______,   _______, _______,     _______, _______, _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,   _______,    _______ },
+                {   _______,    _______,    _______,    _______, _______,    _______, _______, _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______ },
+                {   _______,    _______,    _______,    _______, _______,    _______, _______, _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______ }
+            },
 };
 
 
@@ -266,6 +275,7 @@ td_state_t cur_dance(qk_tap_dance_state_t *state);
 // Functions associated with individual tap dances
 void ql_finished(qk_tap_dance_state_t *state, void *user_data);
 void ql_reset(qk_tap_dance_state_t *state, void *user_data);
+void ql2_finished(qk_tap_dance_state_t *state, void *user_data);
 // Determine the current tap dance state
 td_state_t cur_dance(qk_tap_dance_state_t *state) {
     if (state->count == 1) {
@@ -310,11 +320,42 @@ void ql_reset(qk_tap_dance_state_t *state, void *user_data) {
     }
     ql_tap_state.state = TD_NONE;
 }
+void ql2_finished(qk_tap_dance_state_t *state, void *user_data) {
+    ql_tap_state.state = cur_dance(state);
+    switch (ql_tap_state.state) {
+        case TD_SINGLE_TAP:
+            tap_code(KC_LGUI);
+            break;
+        case TD_SINGLE_HOLD:
+            layer_on(_WIND);
+            break;
+        case TD_DOUBLE_TAP:
+            // Check to see if the layer is already set
+            if (layer_state_is(_WIND)) {
+                // If already set, then switch it off
+                layer_off(_WIND);
+            } else {
+                // If not already set, then switch the layer on
+                layer_on(_WIND);
+            }
+            break;
+        default:
+            break;
+    }
+}
+void ql2_reset(qk_tap_dance_state_t *state, void *user_data) {
+    // If the key was held down and now is released then switch off the layer
+    if (ql_tap_state.state == TD_SINGLE_HOLD) {
+        layer_off(_WIND);
+    }
+    ql_tap_state.state = TD_NONE;
+}
 // Tap Dance definitions
 qk_tap_dance_action_t tap_dance_actions[] = {
     // Tap once for Escape, twice for Caps Lock
     [TD_LALT_MUTE] = ACTION_TAP_DANCE_DOUBLE(KC_LALT, KC_MUTE),
     [FN_LAYR] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, ql_finished, ql_reset, 275),
+    [GUI_LAYR2] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, ql2_finished, ql2_reset, 275),
 };
 
                                                                                 //custom keycode
