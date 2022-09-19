@@ -10,13 +10,13 @@
 enum layer_names {
     _BASE,
     _FN,
-    _WIND,
+    _CAPSLAYER,
 };
 
 enum my_tapDances{
     TD_LALT_MUTE,
     FN_LAYR,
-    GUI_LAYR2,
+    CAPS_LAYR2,
 };
 
 // Macro Keys (for default keymap)
@@ -53,9 +53,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = { {   KC_ESC,     KC_F1,      KC_F2,      KC_F3,   KC_F4,      KC_F5,   KC_F6,   KC_F7,      KC_F8,      KC_F9,      KC_F10,     KC_F11,     KC_F12,     U_REC,      KC_PSCR,    KC_SLCK,    KC_PAUS,    KC_NO,      KC_NO,      KC_MPRV,    U_VOLBRI},
                 {   KC_GRV,     KC_1,       KC_2,       KC_3,    KC_4,       KC_5,    KC_6,    KC_7,       KC_8,       KC_9,       KC_0,       KC_MINS,    KC_EQL,     KC_BSPC,    KC_INS,     KC_HOME,    KC_PGUP,    KC_NLCK,    KC_PSLS,    KC_PAST,    KC_PMNS },
                 {   KC_TAB,     KC_Q,       KC_W,       KC_E,    KC_R,       KC_T,    KC_Y,    KC_U,       KC_I,       KC_O,       KC_P,       KC_LBRC,    KC_RBRC,    KC_BSLS,    KC_DEL,     KC_END,     KC_PGDN,    KC_P7,      KC_P8,      KC_P9,      KC_PPLS },
-                {   KC_CAPS,    KC_A,       KC_S,       KC_D,    KC_F,       KC_G,    KC_H,    KC_J,       KC_K,       KC_L,       KC_SCLN,    KC_QUOT,    KC_NO,      KC_ENT,     U_G5,       U_G4,       U_G3,       KC_P4,      KC_P5,      KC_P6,      KC_MNXT },
+                {   TD(CAPS_LAYR2),    KC_A,       KC_S,       KC_D,    KC_F,       KC_G,    KC_H,    KC_J,       KC_K,       KC_L,       KC_SCLN,    KC_QUOT,    KC_NO,      KC_ENT,     U_G5,       U_G4,       U_G3,       KC_P4,      KC_P5,      KC_P6,      KC_MNXT },
                 {   KC_LSFT,    KC_NO,      KC_Z,       KC_X,    KC_C,       KC_V,    KC_B,    KC_N,       KC_M,       KC_COMM,    KC_DOT,     KC_SLSH,    KC_NO,      KC_RSFT,    U_G2,       KC_UP,      U_G1,       KC_P1,      KC_P2,      KC_P3,      KC_PENT },
-                {   KC_LCTL,    TD(GUI_LAYR2),    TD(TD_LALT_MUTE),    KC_SPC,     KC_RALT, TD(FN_LAYR), KC_APP,     KC_B,       KC_RCTL,    KC_NO,      KC_NO,      KC_NO,      KC_NO,      KC_NO,      KC_LEFT,    KC_DOWN,    KC_RIGHT,   KC_H,       KC_P0,      KC_PDOT,    KC_MPLY }
+                {   KC_LCTL,    KC_LGUI,    TD(TD_LALT_MUTE),    KC_SPC,     KC_RALT, TD(FN_LAYR), KC_APP,     KC_B,       KC_RCTL,    KC_NO,      KC_NO,      KC_NO,      KC_NO,      KC_NO,      KC_LEFT,    KC_DOWN,    KC_RIGHT,   KC_H,       KC_P0,      KC_PDOT,    KC_MPLY }
               },
     [_FN]   = { {   RESET,      KC_MSEL,    KC_VOLD,    KC_VOLU, KC_MUTE,    KC_MSTP, KC_MPRV, KC_MPLY,    KC_MNXT,    KC_MAIL,    KC_SLEP,    KC_CALC,    RGB_TOG,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______ },
                 {   _______,    TO(_BASE),  TO(_FN),    _______, _______,    _______, _______, _______,    _______,    _______,    _______,    RGB_SPD,    RGB_SPI,    _______,    _______,    _______,    _______,    _______,    RGB_HUD,    RGB_HUI,    KC_BRIU },
@@ -64,10 +64,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                 {   _______,    _______,    _______,    _______, CHEVRON,    _______, BANDVALUE, REACTWIDE,    MULTINEXUS,    _______,    _______,    _______,    _______,    _______,    _______,    RGB_SAI,    _______,    RGB_MOD,    RGB_M_G,    RGB_RMOD,    _______ },
                 {   _______,    _______,    _______,    _______, _______,    _______, _______, _______,    _______,    _______,    _______,    _______,    _______,    _______,    RGB_SPD,    RGB_SAD,    RGB_SPI,    _______,    RGB_TOG,    BL_TOGG,    _______ }
              },
-    [_WIND]   = { {   _______,    _______,    _______,    _______, _______,    _______, _______, _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______ },
-                {   KC_VOLU,    _______,    _______,    _______, _______,    _______, _______, _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______ },
-                {   KC_VOLD,    _______,    _______,    _______, _______,    _______, _______, _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______ },
-                {   _______,    _______,    _______,   _______, _______,     _______, _______, _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,   _______,    _______ },
+    [_CAPSLAYER]   = { {   _______,    _______,    _______,    _______, _______,    _______, _______, _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______ },
+                {   _______,    _______,    _______,    _______, _______,    _______, _______, _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______ },
+                {   _______,    _______,    KC_VOLU,    _______, _______,    _______, _______, _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______ },
+                {   _______,    KC_MRWD,    KC_VOLD,   KC_MFFD, _______,     _______, _______, _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,   _______,    _______ },
                 {   _______,    _______,    _______,    _______, _______,    _______, _______, _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______ },
                 {   _______,    _______,    _______,    _______, _______,    _______, _______, _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______ }
             },
@@ -324,20 +324,13 @@ void ql2_finished(qk_tap_dance_state_t *state, void *user_data) {
     ql_tap_state.state = cur_dance(state);
     switch (ql_tap_state.state) {
         case TD_SINGLE_TAP:
-            tap_code(KC_LGUI);
+            tap_code(KC_CAPS);
             break;
         case TD_SINGLE_HOLD:
-            layer_on(_WIND);
+            layer_on(_CAPSLAYER);
             break;
         case TD_DOUBLE_TAP:
-            // Check to see if the layer is already set
-            if (layer_state_is(_WIND)) {
-                // If already set, then switch it off
-                layer_off(_WIND);
-            } else {
-                // If not already set, then switch the layer on
-                layer_on(_WIND);
-            }
+            tap_code(KC_MEDIA_STOP);
             break;
         default:
             break;
@@ -346,7 +339,7 @@ void ql2_finished(qk_tap_dance_state_t *state, void *user_data) {
 void ql2_reset(qk_tap_dance_state_t *state, void *user_data) {
     // If the key was held down and now is released then switch off the layer
     if (ql_tap_state.state == TD_SINGLE_HOLD) {
-        layer_off(_WIND);
+        layer_off(_CAPSLAYER);
     }
     ql_tap_state.state = TD_NONE;
 }
@@ -355,8 +348,26 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     // Tap once for Escape, twice for Caps Lock
     [TD_LALT_MUTE] = ACTION_TAP_DANCE_DOUBLE(KC_LALT, KC_MUTE),
     [FN_LAYR] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, ql_finished, ql_reset, 275),
-    [GUI_LAYR2] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, ql2_finished, ql2_reset, 275),
+    [CAPS_LAYR2] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, ql2_finished, ql2_reset, 275),
 };
 
-                                                                                //custom keycode
+
+/*                                                                             //layer indicator
+void rgb_matrix_indicators_user(void) {
+    switch(get_highest_layer(layer_state|default_layer_state)) {
+        case _FN:
+            rgb_matrix_set_color_all( 0, 0, 0);
+            rgb_matrix_set_color_all(91,104,252);
+            break;
+        case _CAPSLAYER:
+            rgb_matrix_set_color_all( 0, 0, 0);
+            rgb_matrix_set_color_all(91,104,252);
+            break;
+        default:
+            //rgb_matrix_set_color(i, 0, 0, 0);
+            break;
+    }
+}
+*/
+
 
